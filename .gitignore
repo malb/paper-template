@@ -1,0 +1,5 @@
+*.bbl
+*.blg
+*.aux
+/auto/
+/*.pdf

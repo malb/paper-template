@@ -1,0 +1,89 @@
+\documentclass[a4paper,10pt]{llncs}
+
+%% PAGE LAYOUT
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1em}
+
+\usepackage{lineno}
+\linenumbers{}
+
+\pagestyle{plain}
+
+%% TODO NOTES
+
+\usepackage{xcolor}
+\definecolor{oxygenorange}{HTML}{FFDD00}
+\usepackage[color=oxygenorange]{todonotes}
+\newcommand{\malb}[1]{\todo[inline]{\textbf{malb:} #1}\xspace}
+
+%% LISTINGS
+
+\usepackage{listings}
+\lstdefinelanguage{Sage}[]{Python}{morekeywords={True,False,sage,cdef,cpdef,ctypedef,self},sensitive=true}
+\lstset{frame=none,
+          showtabs=False,
+          showspaces=False,
+          showstringspaces=False,
+          commentstyle={\color{orange}},
+          keywordstyle={\color{gray}},
+          stringstyle ={\color{gray}},
+          language = Sage,
+          basicstyle=\scriptsize\tt
+          }
+
+%% ANONYMOUS SUBMISSIONS
+
+\def\isanonymous{0}
+
+\usepackage{ifthen}
+\newcommand{\anonymous}[2]{
+\ifthenelse{\equal{\isanonymous}{1}}
+{{#1}}
+{{#2}}
+}
+
+%% MATHEMATICAL SYMBOLS
+
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{xspace}
+
+\input{utf-8-macros}
+
+%% CRYPTO Notation
+
+\usepackage[lambda,landau,operators,probability,sets,logic,complexity,asymptotics]{cryptocode}
+
+%% OTHER PACKAGES
+
+\usepackage{comment}
+\usepackage{tikz,pgfplots}
+\usepackage{embedfile}
+\usepackage{enumitem}
+
+%% OPENING
+
+\title{A well-written paper about interesting stuff}
+\anonymous{}{\author{Martin R. Albrecht}}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+  We do stuff.
+\end{abstract}
+
+\section{Introduction}\label{sec:introduction}
+      
+\clearpage
+\bibliographystyle{alpha}
+\bibliography{cryptobib/abbrev3,cryptobib/crypto_crossref,local}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+%%% chktex 17
