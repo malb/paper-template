@@ -16,7 +16,7 @@
 
 You might want to first fork and then clone recursively to also get crypto.bib, e.g.:
 
-    git clone --recursive https://malb@bitbucket.org/<you>/<name>.git
+    git clone --recursive https://<you>@bitbucket.org/<you>/<name>.git
 
 You might then also want to `git mv main.tex <name>.tex`
 
