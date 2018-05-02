@@ -4,6 +4,8 @@
 %% obsolete commands and package. https://daniel-j-h.github.io/post/latex-a-modern-approach/
 \usepackage[l2tabu,orthodox]{nag}
 
+\usepackage{ifxetex}
+
 %% TYPOGRAPHY
 
 \usepackage{microtype}
@@ -44,8 +46,6 @@
 \usepackage{amsmath,amsfonts,amssymb}
 \usepackage{xspace}
 
-\input{utf-8-macros}
-
 %% CRYPTO Notation
 
 \usepackage[lambda,landau,operators,probability,sets,logic,complexity,asymptotics]{cryptocode}
@@ -54,8 +54,12 @@
 
 \usepackage{booktabs}  %% tables
 \usepackage{comment}
-\usepackage{embedfile}
 \usepackage{enumitem}
+
+\ifxetex%
+\else%
+\usepackage{embedfile}
+\fi%
 
 %% PLOTS 
 
@@ -164,8 +168,7 @@ We note that depending on which estimate is used vastly different relations betw
 %  \addlegendentry{BKZ sim.\ ($n=390$)};
 \end{axis}
 \end{tikzpicture}
-\caption{Estimates for $\delta_0$ for BKZ-$k$.}
-\label{fig:delta-blocksize}
+\caption{Estimates for $\delta_0$ for BKZ-$k$.}\label{fig:delta-blocksize}
 \end{figure}
 
 \section{Source Code}
