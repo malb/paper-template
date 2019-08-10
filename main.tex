@@ -12,6 +12,7 @@
 % uncomment to enable palatino
 % \usepackage{palatino,mathpazo}
 
+\usepackage[bookmarksdepth=2]{hyperref}
 
 \usepackage{lineno}
 \linenumbers{}
@@ -111,22 +112,22 @@
 
 Several improvements of BKZ have been suggested and their combination is often referred to as BKZ 2.0~\cite{AC:CheNgu11}. These improvements are extreme pruning~\cite{EC:GamNguReg10}, early termination, limiting the enumeration radius to the Gaussian Heuristic and local block pre-processing. Extreme pruning takes place in the enumeration subroutine, and it works by exploring only certain branches in the search tree, with the hope that a short enough vector is still found, therefore decreasing the runtime. Early termination is based on the observation that the quality of the output basis increases more dramatically in the earlier rounds of BKZ\@. Therefore, continuing to reduce the lattice offers diminishing returns in the basis quality, and early termination decreases the runtime while still returning a basis close to the desired quality. Local block pre-processing takes the form of running BKZ-$k'$ with early termination for some value $k'$ so that the local basis is more than merely LLL reduced.
 
-\subsubsection{Quality of Output.} Assuming that the Gaussian Heuristic (GH) and the \emph{Geometric Series Assumption} (GSA) hold for a lattice, Chen\malb[]{Cite PhD thesis} gives a limiting value of the root-Hermite factor $δ_0$ achievable by BKZ as a function of the block size $k$:
+\subsubsection{Quality of Output.} Assuming that the Gaussian Heuristic (GH) and the \emph{Geometric Series Assumption} (GSA) hold for a lattice, Chen\malb[]{Cite PhD thesis} gives a limiting value of the root-Hermite factor $\delta_0$ achievable by BKZ as a function of the block size $k$:
 
 \begin{equation}\label{eq:k-delta}
-\lim_{n \rightarrow ∞} δ_0 ={\left(v_k^{\frac{-1}{k}}\right)}^{\frac{1}{k-1}}  ≈  {\left( \frac{k}{2 \pi e} {(π k)}^{\frac{1}{k}}  \right)}^{\frac{1}{2(k-1)}}
+\lim_{n \rightarrow \infty} \delta_0 ={\left(v_k^{\frac{-1}{k}}\right)}^{\frac{1}{k-1}}  \approx  {\left( \frac{k}{2 \pi e} {(\pi k)}^{\frac{1}{k}}  \right)}^{\frac{1}{2(k-1)}}
 \end{equation}
 where $v_k$ is the volume of the unit ball in dimension $k$. Experimental evidence suggests that we may apply the right hand side of~\eqref{eq:k-delta} as an estimate for $\delta_0$ also when $n$ is finite.
 
-The `lattice rule of thumb' is often used to given an approximation for  $δ_0$ for a given $k$ as $δ_0 = k^{\frac{1}{2k}}$. To ease analysis, this expression, in turn, is often approximated by $δ_0 = 2^{1/k}$.
+The `lattice rule of thumb' is often used to given an approximation for  $\delta_0$ for a given $k$ as $\delta_0 = k^{\frac{1}{2k}}$. To ease analysis, this expression, in turn, is often approximated by $\delta_0 = 2^{1/k}$.
 
-We note that depending on which estimate is used vastly different relations between $k$ and $δ_0$ are assumed. To illustrate this we plot predictions for $δ_0$ for block sizes $50≤ k ≤ 250$ in Figure~\ref{fig:delta-blocksize}.
+We note that depending on which estimate is used vastly different relations between $k$ and $\delta_0$ are assumed. To illustrate this we plot predictions for $\delta_0$ for block sizes $50 \leq k \leq 250$ in Figure~\ref{fig:delta-blocksize}.
 
 \begin{figure}[ht]
 \begin{tikzpicture}
 \pgfplotsset{width=0.9\textwidth, height=0.6\textwidth}
 
-\begin{axis}[xlabel={$k$},ylabel={$δ_0$},legend pos=north east, legend style={fill=none},  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=4}]
+\begin{axis}[xlabel={$k$},ylabel={$\delta_0$},legend pos=north east, legend style={fill=none},  yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=4}]
 \addplot[black, thick] coordinates {
 (90, 1.02531403637007) 
 (100, 1.02329299228075) (110, 1.02159570327009) (120, 1.02014817082573) (130, 1.01889762835997) (140, 1.01780538190175) (150, 1.01684237780642) (160, 1.01598635421221) (170, 1.01521995101070) (180, 1.01452942078216) (190, 1.01390372822689) (200, 1.01333390755540) (210, 1.01281259525780) (220, 1.01233368464143) (230, 1.01189206652013) (240, 1.01148343189850) (250, 1.01110411995830)
