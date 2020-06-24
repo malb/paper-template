@@ -1,0 +1,28 @@
+#+TITLE: Paper Template for Crypto Papers
+
+* Features
+
+- blablabla
+
+* Assumptions
+
+- The paper is in =paper=.
+- Code goes into =code=.
+- Data goes into =data=.
+- Cryptobib is in a directory pointed to by ~BIBINPUTS=.:/path-to/cryptobib~
+
+* Local Changes 
+
+If you want to do local modification to ~.dir-locals.el~ which is under version control, you can use
+
+#+begin_src sh
+git update-index --assume-unchanged .dir-locals.el
+#+end_src
+
+to tell git to ignore changes to that file. Use
+
+#+begin_src sh
+git update-index --no-assume-unchanged .dir-locals.el
+#+end_src
+
+to undo.

@@ -1,3 +1,4 @@
-((magit-mode .
-             ((eval . (and (visual-line-mode 1))))
-             ))
+((latex-mode . ((eval . (progn
+                          (font-latex-add-keywords '(("malb" "*[{")) 'function)
+                          ))))
+ (magit-mode . ((eval visual-line-mode))))
