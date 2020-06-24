@@ -9,6 +9,9 @@
 - [[http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/cryptocode/cryptocode.pdf][cryptocode]] macros
 - ~\anonynmous{foo}{bar}~ to hide/show information during submission/after
 - ~\tikzexternalizemaybe~ to enable ~tikzexternalize~ depending on value of ~buildexternal~
+- [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Directory-Variables.html][~.dir-locals.el~]] according to my taste
+- [[https://github.com/bbatsov/projectile][~.projectile~]] according to my taste
+- Extensive ~.gitignore~ 
 
 ** Assumptions
 
@@ -16,6 +19,7 @@
 - Code goes into =code=.
 - Data goes into =data=.
 - Cryptobib is in a directory pointed to by ~BIBINPUTS=.:/path-to/cryptobib~
+- Scripts write to ~paper/constants.tex~ for use with [[https://ctan.org/pkg/pgfkeys?lang=en][pgfkeys]].
 
 ** Local Changes 
 
