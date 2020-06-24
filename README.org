@@ -1,17 +1,23 @@
-#+TITLE: Paper Template for Crypto Papers
+#+TITLE: project-name
 
-* Features
 
-- blablabla
+* LaTeX Stuff
 
-* Assumptions
+** Features
+
+- [[https://cryptobib.di.ens.fr/][cryptobib]] bibliography
+- [[http://mirrors.ibiblio.org/CTAN/macros/latex/contrib/cryptocode/cryptocode.pdf][cryptocode]] macros
+- ~\anonynmous{foo}{bar}~ to hide/show information during submission/after
+- ~\tikzexternalizemaybe~ to enable ~tikzexternalize~ depending on value of ~buildexternal~
+
+** Assumptions
 
 - The paper is in =paper=.
 - Code goes into =code=.
 - Data goes into =data=.
 - Cryptobib is in a directory pointed to by ~BIBINPUTS=.:/path-to/cryptobib~
 
-* Local Changes 
+** Local Changes 
 
 If you want to do local modification to ~.dir-locals.el~ which is under version control, you can use
 
