@@ -176,4 +176,5 @@
 %%% mode: latex
 %%% TeX-master: t
 %%% TeX-command-extra-options: "-shell-escape"
+%%% eval: (add-hook 'after-save-hook (lambda nil (interactive) (save-window-excursion (when (and (fboundp 'reftex-toc-rescan) (eq major-mode 'latex-mode)) (reftex-toc-rescan)))) 0 t)
 %%% End:
