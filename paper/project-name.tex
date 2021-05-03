@@ -3,6 +3,7 @@
 %% CONFIG
 
 \def\isanonymous{0}
+\def\isfullversion{0}
 \def\buildexternal{1}
 
 %% There is a package that you should include first: nag. Why first? Because it warns you about
@@ -34,8 +35,14 @@
 \usepackage{ifthen}
 \newcommand{\anonymous}[2]{%
 \ifthenelse{\equal{\isanonymous}{1}}%
-{{#1}}%
-{{#2}}%
+{#1}%
+{#2}%
+}%
+
+\newcommand{\fullversion}[2]{%
+\ifthenelse{\equal{\isfullversion}{1}}%
+{#1}%
+{#2}%
 }%
 
 %% SYMBOLS & NOTATION
