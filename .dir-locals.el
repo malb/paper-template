@@ -1,4 +1,15 @@
 ((latex-mode . ((eval . (progn
                           (font-latex-add-keywords '(("malb" "*[{")) 'function)
                           ))))
+ (org-mode . ((org-tags-column . -80)
+              (eval . (when (fboundp 'visual-fill-column-mode) (visual-fill-column-mode t)))
+              (eval . (progn
+                        (setq-local org-highlight-latex-and-related '(native entities))
+                        (setq-local org-pretty-entities-include-sub-superscripts nil)
+                        (setq-local org-pretty-entities t)
+                        (org-compute-latex-and-related-regexp)))
+              (eval . (when (fboundp 'adaptive-wrap-prefix-mode) (adaptive-wrap-prefix-mode)))
+              (eval . (when (fboundp 'flyspell-mode) (flyspell-mode t)))
+              (eval . (when (fboundp 'org-cdlatex-mode) (org-cdlatex-mode t)))
+              (eval . (when (fboundp 'typo-mode) (typo-mode -1)))))
  (magit-mode . ((eval visual-line-mode))))
