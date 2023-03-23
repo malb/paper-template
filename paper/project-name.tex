@@ -2,9 +2,15 @@
 
 %% CONFIG
 
-\def\isanonymous{0}
+\IfFileExists{./.config.tex}{
+\input{.config}
+}
+{
+\def\isanonymous{1}
+\def\isdraft{1}
 \def\isfullversion{0}
 \def\buildexternal{1}
+}
 
 %% There is a package that you should include first: nag. Why first? Because it warns you about
 %% obsolete commands and package. https://daniel-j-h.github.io/post/latex-a-modern-approach/
@@ -25,10 +31,9 @@
 
 %% TODO NOTES
 
-\usepackage{xcolor}
-\definecolor{oxygenorange}{HTML}{FFDD00}
-\usepackage[color=oxygenorange]{todonotes}
-\newcommand{\malb}[2][inline]{\todo[#1]{\textbf{malb:} #2}\xspace}
+\usepackage[
+  \if\isdraft1{draft}\fi
+]{comments-bugs-todos}
 
 %% ANONYMOUS SUBMISSIONS
 
@@ -146,7 +151,7 @@
 
 \section{Introduction}\label{sec:introduction}
 
- \malb{An example note for some example text.}
+\cmnt{malb}{An example note for some example text.}[Foo!]
 
 %  \begin{figure}[htbp]
 %    \caption{something}\label{fig:something}

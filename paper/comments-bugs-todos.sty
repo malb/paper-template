@@ -1,0 +1,149 @@
+% Comments, Bugs, Todos
+% =====================
+%
+% Opinionated wrapper around the todonotes package.
+%
+% Exposes the \cmnt{author}{comment}, \todo{note} and \bug{note} commands. They
+% also all take an optional final argument containing [text to be highlighted].
+%
+% It also provides \hlcmnt{}, \hltodo{} and \hlbug{} if you just want to
+% highlight text in the matching colour of the corresponding main command.
+%
+% It will only render these notes when the 'draft' option has been passed. If no
+% draft option has been passed, it will define each command to a no-op. In other
+% words, it hides all the todo features when not in draft mode.
+%
+% If you are using lualatex, this package uses lua-ul for highlighting (and uses
+% soul otherwise). lua-ul seems to be much more stable than soul: so I'd recommend
+% using lualatex and lua-ul if you want to use the highlighting features.
+%
+% Example usage:
+%   This is a \bug{Wrong!}[false claim] that we make in the paper.
+%   In fact, it is \todo{Check this statement}[possible to do this
+%   better.]\cmnt{dan}{I just crunched the numbers and I don't think it is :(}
+%
+% You can also use todonotes's \listoftodos[<Header>]{} command to add a list of
+% issues. I like to add it to the appendix like this:
+%     \if\draft1 \listoftodos[Comments and Tasks]{} \fi
+%
+
+% Author: Dan Jones <dan.jones.2020@live.rhul.ac.uk>
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{comments-bugs-todos}[2023/03/01 Comments, Bugs, Todos]
+
+\def\draft{0}
+\DeclareOption{draft}{\def\draft{1}}
+\ProcessOptions\relax
+
+\RequirePackage{xstring}
+\RequirePackage{xcolor}
+\RequirePackage{iftex}
+
+\if\draft1
+
+  \RequirePackage[
+    textsize=footnotesize,
+    colorinlistoftodos,
+  ]{todonotes}
+
+  \ifLuaTeX
+    % Use lua-ul for highlighting when possible
+    \RequirePackage{luacolor}
+    \RequirePackage{lua-ul}
+  \else
+    % Fall back to soul for highlighting
+    \RequirePackage{soul}
+    % Compatibility shim
+    \NewDocumentCommand \highLight {o m} {%
+      {%
+        \colorlet{tmpColor}{#1}%
+        \sethlcolor{tmpColor}%
+        \texthl{#2}%
+      }%
+    }
+  \fi
+
+  % Match todo notes to document class (maybe there is a better way to do this?)
+  \makeatletter
+  \@ifclassloaded{acmart}{%
+    % Doesn't change layout but means comments in
+    % margins will go closer to the edge of the page:
+    \setlength{\marginparwidth}{1.5cm}
+    % And closer to the edge of the text:
+    \setlength{\marginparsep}{0.1cm}
+  }{%
+  }
+  \makeatother
+
+  % I want to hide the actual "\todo" command and use it for my custom
+  % use command below. This keeps a copy of the original under the name
+  % "\todonote".
+  \NewCommandCopy{\todonote}{\todo}
+
+  % Tasks, Bugs and Comments for todonotes
+  % (''star'' each command to make it inline)
+
+  \colorlet{TaskColor}{green}
+  \colorlet{BugColor}{red}
+  \colorlet{CommentColor}{magenta!10!yellow!90}
+
+  \NewDocumentCommand \hlcmnt {m} {\highLight[CommentColor!30]{#1}}
+  \NewDocumentCommand \hltodo {m} {\highLight[TaskColor!30]{#1}}
+  \NewDocumentCommand \hlbug {m} {\highLight[BugColor!30]{#1}}
+
+  \RenewDocumentCommand \todo {s m o} {%
+    \IfValueT{#3}{\hltodo{#3}}%
+    \noexpandarg{}\StrLeft{\textbf{todo:} #2}{50}[\TaskCaption]%
+    \todonote[
+      color=TaskColor!30,
+      bordercolor=TaskColor!80,
+      linecolor=TaskColor!80,
+      caption=\TaskCaption,
+      \IfBooleanT{#1}{inline}]{\textbf{todo:} #2}
+    \xspace
+  }
+
+  \NewDocumentCommand \bug {s m o} {%
+    \IfValueT{#3}{\hlbug{#3}}%
+    \noexpandarg{}\StrLeft{\textbf{bug:} #2}{50}[\BugCaption]%
+    \todonote[
+      color=BugColor!30,
+      bordercolor=BugColor!80,
+      linecolor=BugColor!80,
+      caption=\BugCaption,
+      \IfBooleanT{#1}{inline}]{\textbf{bug:} #2}
+    \xspace
+  }
+
+  \NewDocumentCommand \cmnt {s m m o} {%
+    \IfValueT{#4}{\hlcmnt{#4}}%
+    \noexpandarg{}\StrLeft{\textbf{#2:} #3}{50}[\CommentCaption]%
+    \todonote[
+      color=CommentColor!30,
+      bordercolor=CommentColor!80,
+      linecolor=CommentColor!80,
+      caption=\CommentCaption,
+      \IfBooleanT{#1}{inline}]{\textbf{#2:} #3}
+    \xspace
+  }
+
+  % To make the \listoftodos command more manageable, we cut each comment to 50
+  % ``characters'' when displayed in the list. This is done using the ``caption''
+  % argument for \todonote commands.
+  %
+  % We do the actual string cutting using xstring's \StrLeft command and,
+  % importantly, do so in \noexpandarg mode. This means that each command in the
+  % input string is considered as a single ``character''. This means it will never
+  % split the comment halfway through a command call like ``\emph{a sent<cut>ence}''
+  % where we would end up with broken latex since the emph is never closed.
+
+\else
+  \NewDocumentCommand \todo {s m o} {\IfValueT{#3}{#3}}
+  \NewDocumentCommand \bug {s m o} {\IfValueT{#3}{#3}}
+  \NewDocumentCommand \cmnt {s m m o} {\IfValueT{#4}{#4}}
+
+  \NewDocumentCommand \hlcmnt {m} {#1}
+  \NewDocumentCommand \hltodo {m} {#1}
+  \NewDocumentCommand \hlbug {m} {#1}
+\fi
