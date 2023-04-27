@@ -7,7 +7,6 @@
 }
 {
 \def\isanonymous{1}
-\def\isdraft{1}
 \def\isfullversion{0}
 \def\buildexternal{1}
 }
@@ -31,9 +30,8 @@
 
 %% TODO NOTES
 
-\usepackage[
-  \if\isdraft1{draft}\fi
-]{comments-bugs-todos}
+\usepackage{comments-bugs-todos}
+\NewDocumentCommand\malb{s m o}{\IfBooleanTF{#1}{\cmnt*{malb}{#2}}{\cmnt{malb}{#2}}}
 
 %% ANONYMOUS SUBMISSIONS
 

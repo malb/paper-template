@@ -100,7 +100,7 @@
       bordercolor=TaskColor!80,
       linecolor=TaskColor!80,
       caption=\TaskCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{todo:} #2}
+      \IfBooleanT{#1}{inline}]{\textbf{todo:} #2}%
     \xspace
   }
 
@@ -112,7 +112,7 @@
       bordercolor=BugColor!80,
       linecolor=BugColor!80,
       caption=\BugCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{bug:} #2}
+      \IfBooleanT{#1}{inline}]{\textbf{bug:} #2}%
     \xspace
   }
 
@@ -124,7 +124,7 @@
       bordercolor=CommentColor!80,
       linecolor=CommentColor!80,
       caption=\CommentCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{#2:} #3}
+      \IfBooleanT{#1}{inline}]{\textbf{#2:} #3}%
     \xspace
   }
 
@@ -147,3 +147,7 @@
   \NewDocumentCommand \hltodo {m} {#1}
   \NewDocumentCommand \hlbug {m} {#1}
 \fi
+
+%%% Local Variables:
+%%% mode: latex
+%%% End:
