@@ -124,6 +124,10 @@
           basicstyle=\tt\small\relax,,
         }
 
+\ifluatex
+% provides emulation of pdfTeX primitives for LuaTeX v0.85+.
+\usepackage{luatex85}
+\fi
 \usepackage{navigator}
         
 %% PDF SETUP
