@@ -135,7 +135,14 @@
 \hypersetup{colorlinks=true,citecolor=darkgray,linkcolor=darkgray}
 
 %% References 
-\usepackage[capitalize,noabbrev]{cleveref}
+\usepackage[capitalize,nameinlink]{cleveref}
+\crefname{section}{\S}{\S\S}
+\crefformat{section}{\S#2#1#3}
+\crefname{appendix}{Appendix}{Appendices}
+\AddToHook{cmd/appendix/before}{\crefalias{section}{appendix}}
+\AddToHook{cmd/appendix/before}{\crefalias{subsection}{appendix}}
+\AddToHook{cmd/appendix/before}{\gdef\theHsection{\Alph{section}}}
+\pcfixcleveref{}
 
 
 %% OPENING
