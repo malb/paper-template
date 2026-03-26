@@ -1,6 +1,6 @@
 ((latex-mode . ((eval . (progn
-                          (font-latex-add-keywords '(("bug" "{[")) 'function)
-                          (font-latex-add-keywords '(("todo" "{[")) 'function)
+                          (font-latex-add-keywords '(("bug" "*{[")) 'function)
+                          (font-latex-add-keywords '(("todo" "*{[")) 'function)
                           (font-latex-add-keywords '(("cmnt" "{{[")) 'function)
                           (font-latex-add-keywords '(("hlbug" "{")) 'function)
                           (font-latex-add-keywords '(("hltodo" "{")) 'function)
