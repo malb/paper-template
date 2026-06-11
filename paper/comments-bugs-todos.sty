@@ -22,12 +22,15 @@
 %   In fact, it is \todo{Check this statement}[possible to do this
 %   better.]\cmnt{dan}{I just crunched the numbers and I don't think it is :(}
 %
-% You can also use todonotes's \listoftodos[<Header>]{} command to add a list of
-% issues. I like to add it to the appendix like this:
-%     \if\draft1 \listoftodos[Comments and Tasks]{} \fi
-%
-
-% Author: Dan Jones <dan.jones.2020@live.rhul.ac.uk>
+% The command \ListCommentsBugsTodos is supplied which will render a heading
+% with a list of all the comments, bugs and todos in the document. Notes:
+%  - It does this conditionally, depending on whether the document is in draft
+%    mode or not.
+%  - It is essentially a wrapper around todonote's \listoftodos command with a
+%    default title set to 'Comments, Bugs, Todos', colors + links enabled and a
+%    small compatibility fix for llncs.
+%  - You can still change the title from the default by setting the optional
+%    argument to the title of your choice.
 
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesPackage{comments-bugs-todos}[2023/03/01 Comments, Bugs, Todos]
@@ -36,43 +39,73 @@
 \DeclareOption{draft}{\def\draft{1}}
 \ProcessOptions\relax
 
+\RequirePackage{xspace}
 \RequirePackage{xstring}
 \RequirePackage{xcolor}
 \RequirePackage{iftex}
 
+\ifLuaTeX
+  % Use lua-ul for highlighting when possible
+  \RequirePackage{luacolor}
+  \RequirePackage{lua-ul}
+\else
+  % Compatibility shim (just delineate start and end with \hltag)
+  \NewDocumentCommand \highLight {o +m} {%
+      \IfNoValueF{#1}{\colorlet{tmpColor}{#1}\hltag{tmpColor!300}{}{#2}}%
+      \IfNoValueT{#1}{\hltag{magenta!10!yellow!90}{}{#2}}%
+    }
+\fi
+
+% `Tagged` sections/highlights
+\NewDocumentCommand \hltag {m m +m} {%
+  \colorlet{tmpColor}{#1}%
+  \tikz[overlay]{
+    \node [semicircle, fill=tmpColor!20, rotate=90,  minimum height=1.25 ex, inner sep=0, anchor=center, blend mode=darken] at (-0.2 em,0.5 ex) {\tiny \color{tmpColor} \textbf{\textsf{#2}}};%
+  }%
+  {#3}%
+  \tikz[overlay]{%
+    \node [semicircle, fill=tmpColor!20, rotate=270, minimum height=1.25 ex, inner sep=0, anchor=center, blend mode=darken] at (0.2 em,0.5 ex) {\tiny \color{tmpColor} \textbf{\textsf{#2}}};%
+  }%
+}%
+
 \if\draft1
 
   \RequirePackage[
-    textsize=footnotesize,
+    textsize=scriptsize,
     colorinlistoftodos,
   ]{todonotes}
 
-  \ifLuaTeX
-    % Use lua-ul for highlighting when possible
-    \RequirePackage{luacolor}
-    \RequirePackage{lua-ul}
-  \else
-    % Fall back to soul for highlighting
-    \RequirePackage{soul}
-    % Compatibility shim
-    \NewDocumentCommand \highLight {o m} {%
-      {%
-        \colorlet{tmpColor}{#1}%
-        \sethlcolor{tmpColor}%
-        \texthl{#2}%
-      }%
-    }
-  \fi
-
   % Match todo notes to document class (maybe there is a better way to do this?)
+  %   \marginparwidth :: Doesn't _seem_ to change layout but means comments in
+  %     margins will go closer to the edge of the page.
+  %   \marginparsep :: And closer to the edge of the text.
+  %   \marginparpush :: Reduce minimum vertical space between notes.
   \makeatletter
   \@ifclassloaded{acmart}{%
-    % Doesn't change layout but means comments in
-    % margins will go closer to the edge of the page:
     \setlength{\marginparwidth}{1.5cm}
-    % And closer to the edge of the text:
     \setlength{\marginparsep}{0.1cm}
+  }{}
+  \@ifclassloaded{IEEEtran}{%
+    \setlength{\marginparwidth}{1.5cm}
+    \setlength{\marginparsep}{0.1cm}
+    \setlength{\marginparpush}{0.1\baselineskip}
+  }{}
+  \makeatother
+
+  % Fix listoftodos for llncs
+  % (from https://tex.stackexchange.com/questions/103735/list-of-todos-todonotes-is-empty-with-llncs)
+  \makeatletter
+  \@ifclassloaded{llncs}{%
+    \NewDocumentCommand \ListCommentsBugsTodos {o} {%
+      \setcounter{tocdepth}{1}%
+      \IfNoValueT{#1}{\listoftodos[Comments, Bugs, Todos]}%
+      \IfNoValueF{#1}{\listoftodos[#1]}%
+    }
   }{%
+    \NewDocumentCommand \ListCommentsBugsTodos {o} {%
+      \IfNoValueT{#1}{\listoftodos[Comments, Bugs, Todos]}%
+      \IfNoValueF{#1}{\listoftodos[#1]}%
+    }
   }
   \makeatother
 
@@ -88,11 +121,11 @@
   \colorlet{BugColor}{red}
   \colorlet{CommentColor}{magenta!10!yellow!90}
 
-  \NewDocumentCommand \hlcmnt {m} {\highLight[CommentColor!30]{#1}}
-  \NewDocumentCommand \hltodo {m} {\highLight[TaskColor!30]{#1}}
-  \NewDocumentCommand \hlbug {m} {\highLight[BugColor!30]{#1}}
+  \NewDocumentCommand \hlcmnt {+m} {\highLight[CommentColor!30]{#1}}
+  \NewDocumentCommand \hltodo {+m} {\highLight[TaskColor!30]{#1}}
+  \NewDocumentCommand \hlbug {+m} {\highLight[BugColor!30]{#1}}
 
-  \RenewDocumentCommand \todo {s m o} {%
+  \RenewDocumentCommand \todo {s m +o} {%
     \IfValueT{#3}{\hltodo{#3}}%
     \noexpandarg{}\StrLeft{\textbf{todo:} #2}{50}[\TaskCaption]%
     \todonote[
@@ -100,11 +133,11 @@
       bordercolor=TaskColor!80,
       linecolor=TaskColor!80,
       caption=\TaskCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{todo:} #2}%
+      \IfBooleanT{#1}{inline}]{\textsf{\textbf{todo:} #2}}
     \xspace
   }
 
-  \NewDocumentCommand \bug {s m o} {%
+  \NewDocumentCommand \bug {s m +o} {%
     \IfValueT{#3}{\hlbug{#3}}%
     \noexpandarg{}\StrLeft{\textbf{bug:} #2}{50}[\BugCaption]%
     \todonote[
@@ -112,11 +145,11 @@
       bordercolor=BugColor!80,
       linecolor=BugColor!80,
       caption=\BugCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{bug:} #2}%
+      \IfBooleanT{#1}{inline}]{\textsf{\textbf{bug:} #2}}
     \xspace
   }
 
-  \NewDocumentCommand \cmnt {s m m o} {%
+  \NewDocumentCommand \cmnt {s m m +o} {%
     \IfValueT{#4}{\hlcmnt{#4}}%
     \noexpandarg{}\StrLeft{\textbf{#2:} #3}{50}[\CommentCaption]%
     \todonote[
@@ -124,7 +157,7 @@
       bordercolor=CommentColor!80,
       linecolor=CommentColor!80,
       caption=\CommentCaption,
-      \IfBooleanT{#1}{inline}]{\textbf{#2:} #3}%
+      \IfBooleanT{#1}{inline}]{\textsf{\textbf{#2:} #3}}
     \xspace
   }
 
@@ -139,13 +172,17 @@
   % where we would end up with broken latex since the emph is never closed.
 
 \else
-  \NewDocumentCommand \todo {s m o} {\IfValueT{#3}{#3}}
-  \NewDocumentCommand \bug {s m o} {\IfValueT{#3}{#3}}
-  \NewDocumentCommand \cmnt {s m m o} {\IfValueT{#4}{#4}}
+  \NewDocumentCommand \ListCommentsBugsTodos {o} {}
 
-  \NewDocumentCommand \hlcmnt {m} {#1}
-  \NewDocumentCommand \hltodo {m} {#1}
-  \NewDocumentCommand \hlbug {m} {#1}
+  % \NewDocumentCommand \hltag {m m +m} {#3}
+
+  \NewDocumentCommand \hlcmnt {+m} {#1}
+  \NewDocumentCommand \hltodo {+m} {#1}
+  \NewDocumentCommand \hlbug {+m} {#1}
+
+  \NewDocumentCommand \todo {s m +o} {\IfValueT{#3}{#3}}
+  \NewDocumentCommand \bug {s m +o} {\IfValueT{#3}{#3}}
+  \NewDocumentCommand \cmnt {s m m +o} {\IfValueT{#4}{#4}}
 \fi
 
 %%% Local Variables:
