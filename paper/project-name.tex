@@ -48,6 +48,12 @@
 {#2}%
 }%
 
+\NewDocumentEnvironment{fullproof}{o +b}{%
+  \ifthenelse{\equal{\isfullversion}{1}}%
+    {\begin{proof}#2\end{proof}}%
+    {\par\noindent \IfValueTF{#1}{#1}{The proof can be found in the full version.}}%
+}{}
+
 %% SYMBOLS & NOTATION
 
 \usepackage{amsmath,amsfonts,amssymb}
